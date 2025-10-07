@@ -1,7 +1,12 @@
-import LoginPage from './pages/LoginPage.jsx'
+import React from 'react'
+import NavBar from './components/Navbar'
 
-function App() {
-  return <LoginPage />
+const App = () => {
+  return (
+    <div>
+     <NavBar/>
+    </div>
+  )
 }
 
 export default App
