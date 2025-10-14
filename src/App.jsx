@@ -23,6 +23,7 @@ const router = createBrowserRouter(
       <Route path='/my-bookings' element={<MyBookingsPage />} />
       <Route path='/dashboard' element={<DashboardPage />} /> 
       <Route path='*' element={<NotFoundPage />} /> 
+      <Route path='/my-bookings' element={<MyBookingsPage />} />
     </Route>
   )
 );
