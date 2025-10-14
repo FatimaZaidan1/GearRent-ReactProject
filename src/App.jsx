@@ -8,7 +8,9 @@ import {
 import MainLayout from './layouts/MainLayout';
 import HomePage from './pages/HomePage';
 import CamerasPage from './pages/CamerasPage';
+import CameraDetailsPage from './pages/CameraDetailsPage'; // New
 import MyBookingsPage from './pages/MyBookingsPage';
+import DashboardPage from './pages/DashboardPage'; // New
 import NotFoundPage from './pages/NotFoundPage';
 
 // Defines the routing structure for the entire application.
@@ -17,15 +19,15 @@ const router = createBrowserRouter(
     <Route path='/' element={<MainLayout />}>
       <Route index element={<HomePage />} />
       <Route path='/cameras' element={<CamerasPage />} />
+      <Route path='/camera/:id' element={<CameraDetailsPage />} /> 
       <Route path='/my-bookings' element={<MyBookingsPage />} />
-      {/* Catch-all route for 404 */}
+      <Route path='/dashboard' element={<DashboardPage />} /> 
       <Route path='*' element={<NotFoundPage />} /> 
     </Route>
   )
 );
 
 const App = () => {
-  // You will need to install react-router-dom for this to work: npm install react-router-dom
   return <RouterProvider router={router} />;
 };
 
