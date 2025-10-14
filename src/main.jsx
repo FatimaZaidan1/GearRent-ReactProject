@@ -1,11 +1,18 @@
-import { createRoot } from 'react-dom/client'
-// NOTE: We no longer import BrowserRouter because App.jsx uses createBrowserRouter/RouterProvider.
-import './index.css'
-import App from './App.jsx'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux'; // Import Provider
+import { store } from './app/store'; // Import the store
+import App from './App.jsx';
+import './index.css';
 
-createRoot(document.getElementById('root')).render(
-  // The App component already handles routing internally via RouterProvider, 
-  // so we remove the outer <BrowserRouter> tag.
-  <App />
-)
-
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    {/* Wrap the entire application in the Redux Provider */}
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>,
+);
