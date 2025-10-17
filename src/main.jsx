@@ -1,18 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import { Provider } from 'react-redux'; // Import Provider
-import { store } from './app/store'; // Import the store
 import App from './App.jsx';
-import './index.css';
+import './index.css'; // Your Tailwind/Styles
+
+import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    {/* Wrap the entire application in the Redux Provider */}
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>,
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>
 );

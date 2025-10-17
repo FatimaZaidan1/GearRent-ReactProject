@@ -1,63 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Define the initial state for the authentication slice.
-const initialState = {
-  user: null, // Null means not logged in. Will store user object on login.
-  isAuthenticated: false,
-  status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
-  error: null,
-};
-
-// Mock async function to simulate a login API call.
-// In a real app, this would use fetch or an async thunk.
-const mockLogin = (credentials) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // Check for mock credentials (as requested in the project requirements)
-      if (credentials.username === 'admin' && credentials.password === 'admin') {
-        resolve({ 
-          id: 'owner-123', 
-          username: credentials.username, 
-          role: 'owner',
-        });
-      } else {
-        reject(new Error('Invalid username or password.'));
-      }
-    }, 1000); // Simulate network delay
-  });
-};
-
-// We will use a regular action for now, and integrate createAsyncThunk later 
-// when we implement the useAuth custom hook. For simplicity, we define the login logic here.
-export const authSlice = createSlice({
-  name: 'auth',
-  initialState,
-  reducers: {
-    // Action to handle successful mock login
-    loginSuccess: (state, action) => {
-      state.user = action.payload; // payload should be { id, username, role }
-      state.isAuthenticated = true;
-      state.status = 'succeeded';
-      state.error = null;
+const authSlice = createSlice({
+    name: 'auth',
+    initialState: {
+        user: null, // Stores user info if logged in (null if logged out)
+        token: null, // Stores a token (null if logged out)
+        isAuthenticated: false, // Flag derived from token/user status
     },
-    // Action to handle logout
-    logout: (state) => {
-      state.user = null;
-      state.isAuthenticated = false;
-      state.status = 'idle';
-      state.error = null;
+    reducers: {
+        login: (state, action) => {
+            // Mock login logic: Set token and user (e.g., admin)
+            state.user = { id: 'admin', username: 'Admin Staff' };
+            state.token = 'mock-auth-token';
+            state.isAuthenticated = true;
+        },
+        logout: (state) => {
+            // Clear all auth state
+            state.user = null;
+            state.token = null;
+            state.isAuthenticated = false;
+        },
     },
-    // Action to handle login failure
-    loginFailure: (state, action) => {
-      state.user = null;
-      state.isAuthenticated = false;
-      state.status = 'failed';
-      state.error = action.payload;
-    }
-    // Note: We avoid async logic in reducers, but will wrap the mockLogin 
-    // function in an async thunk inside a useAuth hook later.
-  },
 });
 
-export const { loginSuccess, logout, loginFailure } = authSlice.actions;
+// Selector: Selects the authentication status (used by ProtectedRoute and useAuth)
+const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
+
+// Selector: Selects the user ID (This is the new selector we are adding)
+const selectUserId = (state) => state.auth.user ? state.auth.user.id : null;
+
+// Action exports
+export const { login, logout } = authSlice.actions;
+
+// Selector exports
+export { selectIsAuthenticated, selectUserId };
+
+// Default export for the reducer
 export default authSlice.reducer;
