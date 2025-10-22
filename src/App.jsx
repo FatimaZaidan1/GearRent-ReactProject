@@ -19,7 +19,7 @@ const router = createBrowserRouter(
     <Route path='/' element={<MainLayout />}>
       <Route index element={<HomePage />} />
       <Route path='/cameras' element={<CamerasPage />} />
-      <Route path='/camera/:id' element={<CameraDetailsPage />} /> 
+      <Route path='/cameras/:id' element={<CameraDetailsPage />} /> 
       <Route path='/my-bookings' element={<MyBookingsPage />} />
       <Route path='/dashboard' element={<DashboardPage />} /> 
       <Route path='*' element={<NotFoundPage />} /> 

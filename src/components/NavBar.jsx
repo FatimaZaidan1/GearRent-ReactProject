@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import LoginModal from './LoginModal.jsx';
 import RegisterModal from './RegisterModal.jsx';
+import searchIcon from '../assets/search-icon.jpg'; 
+
 
 // Inline SVG Logo using the brand color scheme (White text/icon on Orange background)
 const Logo = () => (
@@ -17,10 +19,30 @@ const Logo = () => (
     </NavLink>
 );
 
+// Component for the uploaded search icon using the imported asset
+const SearchImage = () => (
+    <img 
+        src={searchIcon} // Using the imported variable is the most reliable way 
+        alt="Search Icon" 
+        className="w-10 h-10 object-contain mr-2 text-gray-500"
+    />
+);
+
+
 const Navbar = () => {
     const [showLogin, setShowLogin] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
+    const [searchTerm, setSearchTerm] = useState('');
     const isAuthenticated = false; // Placeholder: Will be replaced by actual auth state
+
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSearchSubmit = (event) => {
+        event.preventDefault();
+        console.log('Searching for:', searchTerm); 
+    };
 
     return (
         <>
@@ -30,8 +52,8 @@ const Navbar = () => {
                         {/* Left Section: Logo */}
                         <Logo />
 
-                        {/* Center Section: Navigation Links */}
-                        <div className="hidden md:flex space-x-8">
+                        {/* Center Section: Navigation Links and Search */}
+                        <div className="hidden md:flex items-center space-x-8">
                             <NavLink 
                                 to="/" 
                                 className={({ isActive }) => 
@@ -53,6 +75,21 @@ const Navbar = () => {
                                 }>
                                 My Bookings
                             </NavLink>
+                            
+                            {/* Search Field */}
+                            <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+                                <div className="flex items-center border border-gray-300 rounded-lg py-1 px-3 bg-gray-50 focus-within:border-[#FF8C00] transition duration-150">
+                                    <SearchImage /> {/* The image component */}
+                                    <input
+                                        type="text"
+                                        placeholder="Search cameras..."
+                                        value={searchTerm}
+                                        onChange={handleSearchChange}
+                                        className="bg-transparent focus:outline-none text-gray-800 text-base w-48"
+                                    />
+                                </div>
+                            </form>
+                            
                             {isAuthenticated && (
                                 <NavLink to="/dashboard" className={({ isActive }) => 
                                     isActive ? 'text-[#FF8C00] font-bold text-lg transition duration-150 border-b-2 border-[#FF8C00]' : 'text-gray-800 hover:text-[#FF8C00] text-lg transition duration-150'

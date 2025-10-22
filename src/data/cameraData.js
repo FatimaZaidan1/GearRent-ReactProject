@@ -1,3 +1,4 @@
+// src/data/cameraData.js (Path may vary)
 // 1. Import local images from the assets folder (ensure these files exist!)
 import sonyA7IVImage from '../assets/sony_a7iv.jpg';
 import canonR5Image from '../assets/canon_r5.jpg';
@@ -12,7 +13,8 @@ const cameraData = [
     title: 'Sony Alpha a7 IV', 
     price: 95, 
     description: 'Mirrorless, 33MP, Full-Frame',
-    // 2. Use the imported image variable here
+    detailedDescription: 'The Sony Alpha a7 IV is a versatile full-frame mirrorless camera suitable for both professional photographers and videographers. It features a new 33MP Exmor R CMOS sensor, 4K 60p video recording, and advanced Real-time AF. Ideal for hybrid shooters.',
+    specs: ['Full-Frame Sensor', '33 Megapixels', '4K 60p Video', 'Silent Shutter'],
     imageUrl: sonyA7IVImage 
   },
   { 
@@ -20,6 +22,8 @@ const cameraData = [
     title: 'Canon EOS R5', 
     price: 120, 
     description: 'Mirrorless, 45MP, 8K Video',
+    detailedDescription: 'The Canon EOS R5 is a groundbreaking mirrorless camera featuring a 45MP sensor and internal 8K RAW video recording. It also boasts exceptional In-Body Image Stabilization (IBIS) and Dual Pixel CMOS AF.',
+    specs: ['8K RAW Video', '45 Megapixels', 'IBIS (8 Stops)', 'Dual Pixel AF II'],
     imageUrl: canonR5Image 
   },
   { 
@@ -27,6 +31,8 @@ const cameraData = [
     title: 'ARRI Alexa Mini LF', 
     price: 500, 
     description: 'Cinema Camera, Large Format',
+    detailedDescription: 'The ARRI Alexa Mini LF delivers a natural, film-like image with Large Format aesthetics. Compact and lightweight, it’s designed for professional film and high-end commercial production, offering a massive dynamic range and beautiful color science.',
+    specs: ['Large Format Sensor', 'ARRI Color Science', 'Internal ND Filters', 'Lightweight Carbon Body'],
     imageUrl: arriMiniLFImage 
   },
   { 
@@ -34,6 +40,8 @@ const cameraData = [
     title: 'Fujifilm X-T5', 
     price: 70, 
     description: 'Mirrorless, 40MP, APS-C',
+    detailedDescription: 'A classic rangefinder-style camera with a modern touch, the X-T5 features a high-resolution 40MP APS-C sensor, 6.2K video recording, and Fujifilm\'s signature film simulations. Perfect for street and documentary photography.',
+    specs: ['APS-C Sensor', '40 Megapixels', '6.2K Video', 'Film Simulations'],
     imageUrl: fujiXT5Image 
   },
   { 
@@ -41,6 +49,8 @@ const cameraData = [
     title: 'DJI Ronin RS 3 Pro', 
     price: 50, 
     description: '3-Axis Gimbal Stabilizer',
+    detailedDescription: 'The DJI Ronin RS 3 Pro is a professional-grade gimbal designed to support mid-sized mirrorless and cinema camera setups. It ensures smooth, cinematic shots with automated axis locks and extended carbon fiber arms.',
+    specs: ['3-Axis Stabilization', 'Carbon Fiber Arms', 'Auto-Lock Axes', '3.8kg Payload'],
     imageUrl: djiRoninImage 
   },
   { 
@@ -48,6 +58,8 @@ const cameraData = [
     title: 'Blackmagic Pocket Cinema Camera 6K Pro', 
     price: 150, 
     description: 'Super 35 Sensor, EF Mount',
+    detailedDescription: 'A cinema camera offering stunning image quality with 6K resolution and a Super 35 sensor. The Pro model includes built-in ND filters, a brighter HDR screen, and longer battery life, making it a powerful and portable production tool.',
+    specs: ['Super 35 Sensor', '6K Resolution', 'Built-in ND Filters', 'EF Lens Mount'],
     imageUrl: blackmagicImage 
   },
 ];
