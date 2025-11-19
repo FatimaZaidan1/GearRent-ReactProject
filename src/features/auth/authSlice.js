@@ -1,39 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  user: JSON.parse(localStorage.getItem("user")) || null,
+  isAuthenticated: !!localStorage.getItem("user"),
+};
 
 const authSlice = createSlice({
-    name: 'auth',
-    initialState: {
-        user: null, // Stores user info if logged in (null if logged out)
-        token: null, // Stores a token (null if logged out)
-        isAuthenticated: false, // Flag derived from token/user status
+  name: "auth",
+  initialState,
+  reducers: {
+    login: (state, action) => {
+      // Expecting payload to contain { name, email }
+      const { name, email } = action.payload;
+      const user = { name, email };
+      state.user = user;
+      state.isAuthenticated = true;
+      localStorage.setItem("user", JSON.stringify(user));
     },
-    reducers: {
-        login: (state, action) => {
-            // Mock login logic: Set token and user (e.g., admin)
-            state.user = { id: 'admin', username: 'Admin Staff' };
-            state.token = 'mock-auth-token';
-            state.isAuthenticated = true;
-        },
-        logout: (state) => {
-            // Clear all auth state
-            state.user = null;
-            state.token = null;
-            state.isAuthenticated = false;
-        },
+    logout: (state) => {
+      state.user = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem("user");
     },
+    register: (state, action) => {
+      // Expecting payload to contain { name, email }
+      const { name, email } = action.payload;
+      const newUser = { name, email };
+      state.user = newUser;
+      state.isAuthenticated = true;
+      localStorage.setItem("user", JSON.stringify(newUser));
+    },
+    updateUser: (state, action) => {
+      // Optional: to update user info later
+      const updatedUser = { ...state.user, ...action.payload };
+      state.user = updatedUser;
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+    },
+  },
 });
 
-// Selector: Selects the authentication status (used by ProtectedRoute and useAuth)
-const selectIsAuthenticated = (state) => state.auth.isAuthenticated;
-
-// Selector: Selects the user ID (This is the new selector we are adding)
-const selectUserId = (state) => state.auth.user ? state.auth.user.id : null;
-
-// Action exports
-export const { login, logout } = authSlice.actions;
-
-// Selector exports
-export { selectIsAuthenticated, selectUserId };
-
-// Default export for the reducer
+export const { login, logout, register, updateUser } = authSlice.actions;
 export default authSlice.reducer;

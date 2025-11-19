@@ -1,5 +1,5 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React from "react";
+import { useSelector } from "react-redux";
 
 const MyBookingsPage = () => {
   const bookings = useSelector((state) => state.bookings.bookings);
@@ -16,19 +16,31 @@ const MyBookingsPage = () => {
             {bookings.map((booking, index) => (
               <div
                 key={index}
-                className="border border-gray-200 rounded-xl p-5 bg-gray-50 shadow-sm hover:shadow-lg transition"
+                className="border rounded-lg shadow-md p-6 bg-gray-50 transition hover:shadow-lg"
               >
                 <img
                   src={booking.image}
-                  alt={booking.name}
-                  className="rounded-lg mb-4 w-full h-48 object-cover"
+                  alt={booking.cameraName}
+                  className="w-full h-40 object-cover rounded-md mb-4"
                 />
-                <h2 className="text-2xl font-semibold">{booking.name}</h2>
-                <p className="text-gray-600">{booking.description}</p>
-                <p className="mt-2 font-medium">
-                  {booking.pickupDate} → {booking.returnDate}
+
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+                  {booking.cameraName}
+                </h2>
+
+                <p className="text-gray-600">
+                  <strong>Start Date:</strong> {booking.startDate}
                 </p>
-                <p className="text-blue-600 font-semibold mt-1">
+
+                <p className="text-gray-600">
+                  <strong>End Date:</strong> {booking.endDate}
+                </p>
+
+                <p className="text-gray-600">
+                  <strong>Total Price:</strong> ${booking.totalPrice}
+                </p>
+
+                <p className="text-blue-600 font-semibold mt-2">
                   Status: {booking.status}
                 </p>
               </div>

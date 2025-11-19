@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/auth/authSlice';
 import LoginModal from './LoginModal.jsx';
 import RegisterModal from './RegisterModal.jsx';
-import searchIcon from '../assets/Search-icon.jpg'; // keep correct path and filename
+import searchIcon from '../assets/Search-icon.jpg';
 
 // Logo Component
 const Logo = () => (
@@ -33,17 +35,22 @@ const Logo = () => (
 );
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const isAuthenticated = false; // Replace with real auth state later
 
   const handleSearchChange = (e) => setSearchTerm(e.target.value);
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     console.log('Searching for:', searchTerm);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
   };
 
   const navLinkClasses = ({ isActive }) =>
@@ -72,7 +79,10 @@ const Navbar = () => {
               </NavLink>
 
               {/* Search Field */}
-              <form onSubmit={handleSearchSubmit} className="relative flex items-center">
+              <form
+                onSubmit={handleSearchSubmit}
+                className="relative flex items-center"
+              >
                 <div className="flex items-center border border-gray-300 rounded-lg py-1 px-3 bg-gray-50 focus-within:border-[#FF8C00] transition duration-150">
                   <img
                     src={searchIcon}
@@ -114,9 +124,20 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <button className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300 font-semibold shadow-md">
-                  Logout
-                </button>
+                <div className="flex items-center space-x-3">
+                  {/* 👇 This small hint confirms signup/login worked */}
+               <span className="text-gray-800 font-medium">
+              Hi{user?.name ? `, ${user.name}` : ''} 👋
+               </span>
+
+
+                  <button
+                    onClick={handleLogout}
+                    className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300 font-semibold shadow-md"
+                  >
+                    Logout
+                  </button>
+                </div>
               )}
             </div>
 
@@ -168,7 +189,6 @@ const Navbar = () => {
                 </NavLink>
               )}
 
-              {/* Auth Buttons (Mobile) */}
               {!isAuthenticated ? (
                 <>
                   <button
@@ -191,12 +211,20 @@ const Navbar = () => {
                   </button>
                 </>
               ) : (
-                <button
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300 font-semibold shadow-md text-left"
-                >
-                  Logout
-                </button>
+                <>
+                  <span className="text-gray-800 text-left">
+                    Hi, {user?.name || user?.email || 'User'} 👋
+                  </span>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition duration-300 font-semibold shadow-md text-left"
+                  >
+                    Logout
+                  </button>
+                </>
               )}
             </div>
           </div>
