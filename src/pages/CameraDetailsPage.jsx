@@ -1,14 +1,20 @@
-// src/pages/CameraDetailsPage.jsx
+// src/pages/CameraDetailsPage.jsx (Updated)
 import React, { useState, useEffect } from 'react';
-import { useParams, NavLink, useNavigate } from 'react-router-dom';
+// Added useLocation to read navigation state
+import { useParams, NavLink, useNavigate, useLocation } from 'react-router-dom'; 
 import { useDispatch } from 'react-redux';
-import { addBooking } from '../features/bookings/bookingSlice';
+// Added updateBooking to the import
+import { addBooking, updateBooking } from '../features/bookings/bookingSlice'; 
 import cameraData from '../data/cameraData'; // 👈 adjust path if needed
 
 const CameraDetailsPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation(); // Initialize useLocation
+
+  // Check if we are updating an existing booking by reading navigation state
+  const bookingToUpdate = location.state?.bookingToUpdate;
 
   const [camera, setCamera] = useState(null);
   const [pickupDate, setPickupDate] = useState('');
@@ -16,16 +22,22 @@ const CameraDetailsPage = () => {
   const [bookingMessage, setBookingMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
-  // Load camera by ID
+  // Load camera by ID and pre-fill dates if updating
   useEffect(() => {
     const foundCamera = cameraData.find(cam => String(cam.id) === id);
     if (foundCamera) {
       setCamera(foundCamera);
+      
+      // Pre-fill dates for update action
+      if (bookingToUpdate) {
+          setPickupDate(bookingToUpdate.pickupDate);
+          setReturnDate(bookingToUpdate.returnDate);
+      }
     }
     setLoading(false);
-  }, [id]);
+  }, [id, bookingToUpdate]); // Depend on bookingToUpdate to re-run on update route
 
-  // Handle booking submit
+  // Handle booking submit (now handles both New and Update)
   const handleBookingSubmit = (e) => {
     e.preventDefault();
 
@@ -36,19 +48,35 @@ const CameraDetailsPage = () => {
 
     const dayDifference = (new Date(returnDate) - new Date(pickupDate)) / (1000 * 60 * 60 * 24);
     const totalPrice = Math.ceil(dayDifference) * camera.price;
+    let message = '';
+    
+    if (bookingToUpdate) {
+        // --- UPDATE EXISTING BOOKING ---
+        dispatch(
+            updateBooking({
+                bookingId: bookingToUpdate.bookingId,
+                newPickupDate: pickupDate,
+                newReturnDate: returnDate,
+                newTotalPrice: totalPrice,
+            })
+        );
+        message = `Booking updated successfully! Total estimated cost: $${totalPrice}`;
+    } else {
+        // --- ADD NEW BOOKING ---
+        dispatch(
+            addBooking({
+                ...camera,
+                pickupDate,
+                returnDate,
+                totalPrice,
+                status: 'Confirmed',
+            })
+        );
+        message = `Booking confirmed! Total estimated cost: $${totalPrice}`;
+    }
 
-    // Dispatch booking info to Redux store
-    dispatch(
-      addBooking({
-        ...camera,
-        pickupDate,
-        returnDate,
-        totalPrice,
-        status: 'Confirmed',
-      })
-    );
 
-    setBookingMessage(`Booking confirmed! Total estimated cost: $${totalPrice}`);
+    setBookingMessage(message);
     
     // Redirect to My Bookings page after a short delay
     setTimeout(() => {
@@ -124,6 +152,7 @@ const CameraDetailsPage = () => {
             </div>
 
             <form onSubmit={handleBookingSubmit} className="space-y-4">
+              {/* NOTE: Dates are pre-filled if bookingToUpdate exists */}
               <div>
                 <label htmlFor="pickupDate" className="block text-sm font-medium text-gray-700 mb-1">
                   Pickup Date
@@ -164,13 +193,16 @@ const CameraDetailsPage = () => {
                 type="submit"
                 className="w-full py-3 px-6 rounded-lg text-white font-bold text-lg bg-[#FF8C00] hover:bg-orange-600 transition duration-300 shadow-md mt-6"
               >
-                Book Now
+                {/* Dynamically change button text */}
+                {bookingToUpdate ? 'Update Booking' : 'Book Now'}
               </button>
 
               {bookingMessage ? (
                 <p
                   className={`text-center font-medium ${
-                    bookingMessage.includes('confirmed') ? 'text-green-600' : 'text-red-500'
+                    bookingMessage.includes('confirmed') || bookingMessage.includes('updated')
+                      ? 'text-green-600'
+                      : 'text-red-500'
                   } pt-2`}
                 >
                   {bookingMessage}
